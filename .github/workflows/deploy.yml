@@ -2,7 +2,7 @@ name: CI/CD Pipeline for Resume Website
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # Triggers pipeline only when you push to main branch
 
 jobs:
   build-and-deploy:
@@ -12,10 +12,17 @@ jobs:
     - name: 🔄 Checkout Repository
       uses: actions/checkout@v3
 
-    - name: 🐳 Ensure classic Docker builder is used
-      run: |
-        docker build --version
-        docker builder prune -f
+    - name: 🔧 Check Docker Version
+      run: docker --version
+
+    - name: 🧪 Check Docker Buildx Version
+      run: docker buildx version
+
+    - name: 🔍 Show Buildx Builders
+      run: docker buildx ls
+
+    - name: 🧹 Reset to Classic Docker Builder (optional)
+      run: docker builder prune -f
 
     - name: 🔧 Build Docker Image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/resume-site:latest .
