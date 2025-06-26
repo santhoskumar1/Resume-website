@@ -12,6 +12,11 @@ jobs:
     - name: 🔄 Checkout Repository
       uses: actions/checkout@v3
 
+    - name: 🐳 Ensure classic Docker builder is used
+      run: |
+        docker build --version
+        docker builder prune -f
+
     - name: 🔧 Build Docker Image
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/resume-site:latest .
 
