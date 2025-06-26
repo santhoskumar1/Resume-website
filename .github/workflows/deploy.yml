@@ -2,29 +2,23 @@ name: CI/CD Pipeline for Resume Website
 
 on:
   push:
-    branches: [main]  # Triggers pipeline only when you push to main branch
+    branches: [main]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_BUILDKIT: 0  # ⛔️ Disable BuildKit to avoid buildx redirect
+
     steps:
     - name: 🔄 Checkout Repository
       uses: actions/checkout@v3
 
-    - name: 🔧 Check Docker Version
+    - name: 🔧 Docker Version
       run: docker --version
 
-    - name: 🧪 Check Docker Buildx Version
-      run: docker buildx version
-
-    - name: 🔍 Show Buildx Builders
-      run: docker buildx ls
-
-    - name: 🧹 Reset to Classic Docker Builder (optional)
-      run: docker builder prune -f
-
-    - name: 🔧 Build Docker Image
+    - name: 🔧 Build Docker Image (Classic Build)
       run: docker build -t ${{ secrets.DOCKER_USERNAME }}/resume-site:latest .
 
     - name: 🔐 Login to DockerHub
